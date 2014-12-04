@@ -102,11 +102,12 @@ function MdTabsController($scope, $element, $mdUtil, $$rAF) {
     if (!angular.isDefined(self.tabToFocus)) {
       tab.element.focus();
     }
-    self.deselect(self.getSelectedItem());
+    var rightToLeft = self.indexOf(tab) < $scope.selectedIndex;
+    self.deselect(self.getSelectedItem(), rightToLeft);
 
     $scope.selectedIndex = self.indexOf(tab);
     tab.isSelected = true;
-    tab.onSelect();
+    tab.onSelect(rightToLeft);
 
     $scope.$broadcast('$mdTabsChanged');
   }
@@ -116,13 +117,13 @@ function MdTabsController($scope, $element, $mdUtil, $$rAF) {
     self.tabToFocus = tab;
   }
 
-  function deselect(tab) {
+  function deselect(tab, rightToLeft) {
     if (!tab || !tab.isSelected) return;
     if (!tabsList.contains(tab)) return;
 
     $scope.selectedIndex = -1;
     tab.isSelected = false;
-    tab.onDeselect();
+    tab.onDeselect(rightToLeft);
   }
 
   function next(tab, filterFn) {
